@@ -1,0 +1,10 @@
+
+PermitRootLogin prohibit-password
+PubkeyAuthentication yes
+
+# Some default configuration I have not bothered changing
+KbdInteractiveAuthentication no
+UsePAM yes
+PrintMotd no
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*

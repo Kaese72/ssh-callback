@@ -1,0 +1,51 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ssh-callback
+  labels:
+    app: ssh-callback
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ssh-callback
+  template:
+    metadata:
+      labels:
+        app: ssh-callback
+    spec:
+      containers:
+      - name: ssh-callback
+        image: ssh-callback:v0.0.14
+        ports:
+        - containerPort: 22
+        volumeMounts:
+          - name: authorized-keys
+            mountPath: /root/.ssh/authorized_keys
+            subPath: authorized_keys
+          - name: ssh-host-keys
+            # We will move the keys to the right location during startup
+            mountPath: /tmp/hostkeys.d/
+      volumes:
+      - name: authorized-keys
+        configMap:
+          name: authorized-keys
+      - name: ssh-host-keys
+        secret:
+          secretName: ssh-host-keys
+          defaultMode: 0600
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ssh-callback
+spec:
+  selector:
+    app: ssh-callback
+  ports:
+    - protocol: TCP
+      port: 22
+      targetPort: 22
+      nodePort: 30022
+  type: NodePort
