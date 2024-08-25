@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: ssh-callback
-        image: ssh-callback:v0.0.14
+        image: ghcr.io/kaese72/ssh-callback:v0.0.2
         ports:
         - containerPort: 22
         volumeMounts:
